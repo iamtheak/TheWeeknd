@@ -1,0 +1,31 @@
+.marquee{
+  position: fixed;
+  font-size: 4rem;
+  top: 20%;
+  color: white;
+  transition: all ease-in-out 0.25s;
+  padding: 10px 0;
+  width: 200%;
+  height: auto;
+  background-color: rgb(0, 0, 0);
+  width: 140vw;
+  z-index: -1;
+
+  .marquee-inner{
+    display: flex;
+    width: fit-content;
+    position: relative;
+    flex: auto;
+    
+    .marquee-part{
+      flex-shrink: 0;
+      padding: 5px 0;
+      width: 330px;
+    }
+  }
+}
+
+.active {
+  background-color: white;
+  color: #202020;
+}
