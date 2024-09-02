@@ -4,7 +4,7 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useRef, useState } from "react";
 import "./App.css";
 import afterhours from "./assets/img/afterhours.jpeg";
-import bbtm from "./assets/img/bbtm.jpeg";
+import bbtm from "./assets/img/bbtm.jpeg"
 import dawnfm from "./assets/img/dawnfm.jpeg";
 import eos from "./assets/img/eos.jpeg";
 import hob from "./assets/img/hob.jpg";
@@ -59,10 +59,6 @@ function App() {
         },
         pin: ".main",
         pinSpacing: true,
-        onSnapComplete: (self) => {
-          let index = Math.round(self.progress * (imageDivs.length - 1));
-          mainRef.current.style.backgroundColor = `green}`;
-        },
       },
     });
 
@@ -92,16 +88,6 @@ function App() {
         },
       });
     });
-
-    let marqueeParts = gsap.utils.toArray(".marquee-part");
-    let tween = gsap
-      .to(marqueeParts, {
-        xPercent: -100,
-        duration: 2,
-        repeat: -1,
-        ease: "linear",
-      })
-      .totalProgress(0.5);
   });
 
   return (
