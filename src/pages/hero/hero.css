@@ -44,6 +44,7 @@
         img{
             filter: none;
             height: 70vh;
+            width: 60vw;
         }
     }
 
@@ -51,6 +52,7 @@
         img {
             filter: none;
             height: 50vh;
+            width: 70vw;
         }
     }
 }
