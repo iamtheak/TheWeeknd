@@ -19,7 +19,7 @@
     transition: all ease-in-out 0.25s;
 
     img {
-        width: 100vw;
+        width: 50vw;
         height: 100vh;
         object-fit: contain;
         filter: blur(5px);
