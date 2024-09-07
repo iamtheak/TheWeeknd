@@ -1,38 +1,61 @@
-.main{
-  max-height: 100vh;
-  overflow: hidden;
-  background-color: #282828;
-  transition: all ease-in-out 1s;
+.main {
+    max-height: 100vh;
+    overflow: hidden;
+    background-color: #282828;
+    transition: all ease-in-out 1s;
 }
 
-.main-div{
-  width: 900vw;
-  display: flex;
+.main-div {
+    width: 900vw;
+    display: flex;
 }
 
-.img-holder{
-  width: 100vw;
-  height: 100vh;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  transition: all ease-in-out 0.25s;
-    img{
-        width: auto;
+.img-holder {
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: all ease-in-out 0.25s;
+
+    img {
+        width: 100vw;
         height: 100vh;
         object-fit: contain;
         filter: blur(5px);
         transition: all ease-in-out 0.25s;
         z-index: 1;
     }
-    img:hover{
+
+    img:hover {
         filter: blur(0px);
         transform: scale(1.02);
         z-index: 2;
     }
+
+    @media (max-width: 1440px) {
+        img {
+            /*filter: none;*/
+            height: 80vh;
+        }
+    }
+
+    @media (max-width: 1024px) {
+        img{
+            filter: none;
+            height: 70vh;
+        }
+    }
+
+    @media (max-width: 768px) {
+        img {
+            filter: none;
+            height: 50vh;
+        }
+    }
 }
 
-.loader{
+.loader {
     position: absolute;
     width: 100vw;
     height: 100vh;
@@ -42,7 +65,7 @@
     background-color: black;
     z-index: 100;
 
-    .svg-holder{
+    .svg-holder {
         width: 310px;
         height: 330px;
     }

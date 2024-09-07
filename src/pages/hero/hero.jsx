@@ -189,7 +189,7 @@ function Hero() {
         word={"The Weeknd"}
         direction="left"
         count={8}
-        pos="20%"
+        pos="10%"
       />
 
       <Marquee
@@ -197,7 +197,7 @@ function Hero() {
         word={"XO"}
         direction="right"
         count={8}
-        pos="60%"
+        pos="70%"
       />
     </div>
   );
