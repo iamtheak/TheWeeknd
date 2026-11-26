@@ -1,4 +1,4 @@
-.marquee{
+.marquee {
   position: fixed;
   font-size: 4rem;
   top: 20%;
@@ -10,13 +10,13 @@
   width: 140vw;
   z-index: -1;
 
-  .marquee-inner{
+  .marquee-inner {
     display: flex;
     width: fit-content;
     position: relative;
     flex: auto;
-    
-    .marquee-part{
+
+    .marquee-part {
       flex-shrink: 0;
       padding: 5px 0;
       width: 330px;

@@ -1,5 +1,5 @@
 import { useGSAP } from "@gsap/react";
-import React, { useRef } from "react";
+import { useRef } from "react";
 import gsap from "gsap";
 import "./marquee.css";
 
@@ -15,25 +15,28 @@ const Marquee = ({
   const marqueeRef = useRef(null);
   const marqueeInnerRef = useRef(null);
 
-  useGSAP(() => {
-    if (marqueeRef.current === null) return;
-    if (marqueeInnerRef.current === null) return;
+  useGSAP(
+    () => {
+      if (marqueeRef.current === null) return;
+      if (marqueeInnerRef.current === null) return;
 
-    let marqueeParts = marqueeInnerRef.current.children;
+      let marqueeParts = marqueeInnerRef.current.children;
 
-    let tween = gsap
-      .to(marqueeParts, {
-        xPercent: -100,
-        duration: 2,
-        repeat: -1,
-        ease: "linear",
-      })
-      .totalProgress(0.5);
+      let tween = gsap
+        .to(marqueeParts, {
+          xPercent: -100,
+          duration: 2,
+          repeat: -1,
+          ease: "linear",
+        })
+        .totalProgress(0.5);
 
-    if (direction === "right") {
-      gsap.to(tween, { timeScale: -1 });
-    }
-  }, [marqueeRef.current, marqueeInnerRef.current]);
+      if (direction === "right") {
+        gsap.to(tween, { timeScale: -1 });
+      }
+    },
+    { dependencies: [direction], scope: marqueeRef },
+  );
 
   return (
     <div

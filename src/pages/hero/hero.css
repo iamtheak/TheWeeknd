@@ -1,77 +1,91 @@
 .main {
-    max-height: 100vh;
-    overflow: hidden;
-    background-color: #282828;
-    transition: all ease-in-out 1s;
+  max-height: 100vh;
+  overflow: hidden;
+  background-color: #282828;
+  transition: all ease-in-out 1s;
 }
 
 .main-div {
-    width: 900vw;
-    display: flex;
+  width: 1000vw;
+  display: flex;
 }
 
 .img-holder {
-    width: 100vw;
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  transition: all ease-in-out 0.25s;
+
+  img {
+    width: 50vw;
     height: 100vh;
-    display: flex;
-    justify-content: center;
-    align-items: center;
+    object-fit: contain;
+    filter: blur(5px);
     transition: all ease-in-out 0.25s;
+    z-index: 1;
+  }
 
+  img {
+    cursor: pointer;
+  }
+
+  img:hover,
+  img:focus-visible {
+    filter: blur(0px);
+    transform: scale(1.02);
+    z-index: 2;
+  }
+
+  @media (max-width: 1440px) {
     img {
-        width: 50vw;
-        height: 100vh;
-        object-fit: contain;
-        filter: blur(5px);
-        transition: all ease-in-out 0.25s;
-        z-index: 1;
+      /*filter: none;*/
+      height: 80vh;
     }
+  }
 
-    img:hover {
-        filter: blur(0px);
-        transform: scale(1.02);
-        z-index: 2;
+  @media (max-width: 1024px) {
+    img {
+      filter: none;
+      height: 70vh;
+      width: 60vw;
     }
+  }
 
-    @media (max-width: 1440px) {
-        img {
-            /*filter: none;*/
-            height: 80vh;
-        }
+  @media (max-width: 768px) {
+    img {
+      filter: none;
+      height: 50vh;
+      width: 70vw;
     }
-
-    @media (max-width: 1024px) {
-        img{
-            filter: none;
-            height: 70vh;
-            width: 60vw;
-        }
-    }
-
-    @media (max-width: 768px) {
-        img {
-            filter: none;
-            height: 50vh;
-            width: 70vw;
-        }
-    }
+  }
 }
 
 .loader {
-    position: absolute;
-    width: 100vw;
-    height: 100vh;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    background-color: black;
-    z-index: 100;
+  position: absolute;
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: black;
+  z-index: 100;
 
-    .svg-holder {
-        width: 310px;
-        height: 330px;
-    }
+  .svg-holder {
+    width: 310px;
+    height: 330px;
+  }
 }
 
-
-
+@keyframes opacityDecrease {
+  0% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+  100% {
+    opacity: 0;
+  }
+}

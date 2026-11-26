@@ -1,0 +1,422 @@
+:root {
+  --banner-height: 64px;
+}
+
+.yt-card {
+  position: fixed;
+  right: 16px;
+  bottom: calc(var(--banner-height) + 12px);
+  width: 356px;
+  height: 200px;
+  z-index: 300;
+  border-radius: 10px;
+  overflow: hidden;
+  background: #000;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.45);
+  /* Not display:none: the iframe must keep loading while the card is hidden. */
+  opacity: 0;
+  pointer-events: none;
+  transform: translateY(24px);
+  transition:
+    opacity 0.4s ease,
+    transform 0.4s ease;
+}
+
+.yt-card.visible {
+  opacity: 1;
+  pointer-events: auto;
+  transform: none;
+}
+
+.yt-host,
+.yt-host iframe {
+  width: 100%;
+  height: 100%;
+  display: block;
+  border: 0;
+}
+
+@media (max-width: 480px) {
+  .yt-card {
+    left: 16px;
+    right: 16px;
+    width: auto;
+  }
+
+  /* Slid below the banner, not display:none, so the music keeps playing. */
+  .yt-card.visible.collapsed {
+    opacity: 0;
+    pointer-events: none;
+    transform: translateY(calc(100% + var(--banner-height) + 12px));
+  }
+}
+
+/* Now-playing banner */
+.now-playing {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: var(--banner-height);
+  z-index: 300;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 0 16px;
+  background: rgba(10, 10, 10, 0.92);
+  backdrop-filter: blur(8px);
+  color: #fff;
+  font-family: system-ui, sans-serif;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  animation: banner-in 0.4s ease both;
+}
+
+@keyframes banner-in {
+  from {
+    transform: translateY(100%);
+  }
+}
+
+.now-playing-link {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-width: 0;
+  flex: 1;
+  color: inherit;
+  text-decoration: none;
+}
+
+.now-playing-link img {
+  width: 44px;
+  height: 44px;
+  object-fit: cover;
+  border-radius: 4px;
+  flex-shrink: 0;
+}
+
+.now-playing-text {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.now-playing-label {
+  font-size: 0.7rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  opacity: 0.6;
+}
+
+.now-playing-title {
+  font-family: var(--album-body, inherit);
+  font-size: 1.05rem;
+  font-weight: 600;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.now-playing-album {
+  font-size: 0.85rem;
+  opacity: 0.7;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.now-playing-error {
+  color: #ff8a80;
+}
+
+.now-playing-controls {
+  display: flex;
+  gap: 6px;
+  flex-shrink: 0;
+}
+
+.now-playing-controls button {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  border: 0;
+  background: transparent;
+  color: #fff;
+  font-size: 1rem;
+  cursor: pointer;
+}
+
+.now-playing-controls button:hover {
+  background: rgba(255, 255, 255, 0.12);
+}
+
+.now-playing-controls .video-toggle {
+  display: none;
+  font-size: 1.2rem;
+}
+
+@media (max-width: 480px) {
+  .now-playing-controls .video-toggle {
+    display: block;
+  }
+}
+
+.now-playing-controls .lyrics-toggle {
+  width: auto;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 0 14px;
+  border-radius: 999px;
+  font:
+    600 0.85rem system-ui,
+    sans-serif;
+}
+
+.now-playing-controls .lyrics-toggle.active {
+  background: #fff;
+  color: #111;
+}
+
+@media (max-width: 480px) {
+  .now-playing {
+    gap: 8px;
+  }
+
+  .now-playing-controls {
+    gap: 2px;
+  }
+
+  .now-playing-controls button {
+    width: 36px;
+    height: 36px;
+  }
+
+  /* Tight on phones: icon-only lyrics button, and no "previous". */
+  .now-playing-controls .lyrics-toggle {
+    width: 36px;
+    padding: 0;
+    justify-content: center;
+  }
+
+  .lyrics-toggle-label,
+  .now-playing-controls .prev {
+    display: none;
+  }
+}
+
+.now-playing-controls .play {
+  background: #fff;
+  color: #111;
+}
+
+.now-playing-controls .play:hover {
+  background: #ddd;
+}
+
+/* Lyrics: full screen above the page, below the banner and video card. */
+.lyrics {
+  position: fixed;
+  inset: 0 0 var(--banner-height) 0;
+  z-index: 250;
+  display: flex;
+  flex-direction: column;
+  color: #fff;
+  background: linear-gradient(
+    180deg,
+    color-mix(in srgb, var(--lyrics-bg) 85%, #000) 0%,
+    color-mix(in srgb, var(--lyrics-bg) 40%, #000) 100%
+  );
+  font-family: var(--album-body, system-ui, sans-serif);
+  animation: lyrics-in 0.35s ease both;
+}
+
+@keyframes lyrics-in {
+  from {
+    opacity: 0;
+    transform: translateY(24px);
+  }
+}
+
+.lyrics-header {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 20px 6vw;
+  flex-shrink: 0;
+}
+
+.lyrics-header img {
+  width: 52px;
+  height: 52px;
+  object-fit: cover;
+  border-radius: 4px;
+}
+
+.lyrics-heading {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  flex: 1;
+}
+
+.lyrics-track {
+  font-family: var(--album-display, inherit);
+  font-weight: var(--album-weight, 700);
+  font-style: var(--album-style, normal);
+  letter-spacing: var(--album-tracking, 0);
+  text-transform: var(--album-transform, none);
+  color: var(--album-accent, #fff);
+  text-shadow: var(--album-glow, none);
+  font-size: 1.5rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.lyrics-album {
+  font-size: 0.85rem;
+  opacity: 0.7;
+}
+
+.lyrics-close {
+  width: 44px;
+  height: 44px;
+  flex-shrink: 0;
+  border-radius: 50%;
+  border: 1px solid rgba(255, 255, 255, 0.35);
+  background: transparent;
+  color: inherit;
+  font-size: 1.1rem;
+  cursor: pointer;
+}
+
+.lyrics-close:hover {
+  background: rgba(255, 255, 255, 0.12);
+}
+
+.lyrics-body {
+  position: relative; /* lines' offsetTop is measured from here */
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  padding: 24px 6vw 48px;
+  scrollbar-width: none;
+}
+
+/* Synced: room above and below so any line can sit in the middle. */
+.lyrics-body.synced {
+  padding-top: 30vh;
+  padding-bottom: 45vh;
+  mask-image: linear-gradient(transparent, #000 15%, #000 85%, transparent);
+}
+
+.lyrics-lines {
+  list-style: none;
+  max-width: 900px;
+}
+
+.lyrics-line {
+  display: block;
+  width: 100%;
+  padding: 8px 0;
+  border: 0;
+  background: none;
+  color: inherit;
+  font: inherit;
+  font-size: clamp(1.6rem, 3vw, 2.6rem);
+  font-weight: 700;
+  font-synthesis: none; /* no faux bold on single-weight fonts */
+  line-height: 1.25;
+  text-align: left;
+  cursor: pointer;
+  opacity: 0.35;
+  transform-origin: left center;
+  transition:
+    opacity 0.3s ease,
+    transform 0.3s ease;
+}
+
+.lyrics-line.past {
+  opacity: 0.55;
+}
+
+.lyrics-line:hover,
+.lyrics-line:focus-visible {
+  opacity: 0.85;
+}
+
+.lyrics-line.active {
+  opacity: 1;
+  transform: scale(1.03);
+}
+
+.lyrics-plain p {
+  font-size: 1.3rem;
+  line-height: 1.6;
+}
+
+.lyrics-message {
+  font-size: 1.2rem;
+  opacity: 0.85;
+}
+
+.lyrics-retry {
+  background: none;
+  border: 0;
+  color: inherit;
+  font: inherit;
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+.lyrics-note {
+  font-size: 0.85rem;
+  opacity: 0.7;
+  margin-bottom: 24px;
+}
+
+.lyrics-credit {
+  margin-top: 48px;
+  font-size: 0.75rem;
+  opacity: 0.45;
+}
+
+/* Desktop: keep lyrics clear of the video card in the bottom-right corner. */
+@media (min-width: 900px) {
+  .lyrics-body {
+    padding-right: calc(356px + 48px);
+  }
+}
+
+@media (max-width: 480px) {
+  .lyrics-header {
+    padding: 16px;
+  }
+
+  .lyrics-body {
+    padding-left: 16px;
+    padding-right: 16px;
+  }
+
+  .lyrics-body.synced {
+    padding-top: 25vh;
+  }
+
+  .lyrics-line {
+    font-size: 1.5rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .lyrics {
+    animation: none;
+  }
+
+  .lyrics-line,
+  .lyrics-line.active {
+    transition: none;
+    transform: none;
+  }
+}
