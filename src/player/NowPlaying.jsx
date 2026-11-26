@@ -1,3 +1,4 @@
+import { Pause, Play, SkipBack, SkipForward } from "lucide-react";
 import { Link } from "react-router";
 import { themeVars } from "../data/albums.js";
 import { usePlayer } from "./PlayerContext.js";
@@ -92,7 +93,7 @@ function NowPlaying() {
           onClick={previous}
           aria-label="Previous track"
         >
-          ⏮
+          <SkipBack size={18} fill="currentColor" aria-hidden="true" />
         </button>
         <button
           type="button"
@@ -100,10 +101,14 @@ function NowPlaying() {
           onClick={togglePlay}
           aria-label={isPlaying ? "Pause" : "Play"}
         >
-          {isPlaying ? "❚❚" : "▶"}
+          {isPlaying ? (
+            <Pause size={18} fill="currentColor" aria-hidden="true" />
+          ) : (
+            <Play size={18} fill="currentColor" aria-hidden="true" />
+          )}
         </button>
         <button type="button" onClick={next} aria-label="Next track">
-          ⏭
+          <SkipForward size={18} fill="currentColor" aria-hidden="true" />
         </button>
       </div>
     </div>

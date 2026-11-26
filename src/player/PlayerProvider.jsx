@@ -163,7 +163,8 @@ export function PlayerProvider({ children }) {
     }
     const player = await playerPromiseRef.current;
     if (!player) return;
-    if (status === "playing") player.pauseVideo();
+    // Buffering counts as playing: pause stops it rather than doing nothing.
+    if (status === "playing" || status === "loading") player.pauseVideo();
     else player.playVideo();
   }, [status, playTrack]);
 
@@ -212,7 +213,8 @@ export function PlayerProvider({ children }) {
       track: album ? album.tracks[current.index] : null,
       status,
       error,
-      isPlaying: status === "playing",
+      // Buffering keeps the pause button, so it doesn't flicker mid-song.
+      isPlaying: status === "playing" || status === "loading",
       playTrack,
       togglePlay,
       next,
