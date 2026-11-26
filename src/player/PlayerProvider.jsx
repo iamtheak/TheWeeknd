@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { getAlbum } from "../data/albums.js";
+import { albums, getAlbum } from "../data/albums.js";
 import { PlayerContext } from "./PlayerContext.js";
 import "./player.css";
 
@@ -36,7 +36,22 @@ async function findVideoId(album, index) {
   return videoId;
 }
 
+// The album after this one, wrapping from the last back to the first.
+function nextAlbumOf(albumId) {
+  const i = albums.findIndex((album) => album.id === albumId);
+  return albums[(i + 1) % albums.length];
+}
+
 export function PlayerProvider({ children }) {
+  // The open album page registers here to animate into the next album when
+  // playback rolls over (see AlbumView).
+  const albumChangeRef = useRef(null);
+  const onAlbumChange = useCallback((handler) => {
+    albumChangeRef.current = handler;
+    return () => {
+      if (albumChangeRef.current === handler) albumChangeRef.current = null;
+    };
+  }, []);
   // current: { albumId, index } of the loaded track, or null.
   const [current, setCurrent] = useState(null);
   // idle | loading | playing | paused | ended | error
@@ -116,8 +131,15 @@ export function PlayerProvider({ children }) {
     const cur = currentRef.current;
     if (!cur) return;
     const album = getAlbum(cur.albumId);
-    if (cur.index + 1 < album.tracks.length)
+    if (cur.index + 1 < album.tracks.length) {
       playTrack(cur.albumId, cur.index + 1);
+      return;
+    }
+    // Last song of the album: carry on into the next album, and let the
+    // open album page (if any) follow along.
+    const upcoming = nextAlbumOf(cur.albumId);
+    playTrack(upcoming.id, 0);
+    albumChangeRef.current?.(cur.albumId, upcoming);
   }, [playTrack]);
 
   const previous = useCallback(async () => {
@@ -167,12 +189,7 @@ export function PlayerProvider({ children }) {
         if (e.data === S.PLAYING) setStatus("playing");
         else if (e.data === S.PAUSED) setStatus("paused");
         else if (e.data === S.BUFFERING) setStatus("loading");
-        else if (e.data === S.ENDED) {
-          const cur = currentRef.current;
-          const album = cur && getAlbum(cur.albumId);
-          if (album && cur.index + 1 < album.tracks.length) next();
-          else setStatus("ended");
-        }
+        else if (e.data === S.ENDED) next();
       },
       onError: (e) => {
         // 101 / 150: the owner blocked embedding. Pick another video for this
@@ -209,6 +226,7 @@ export function PlayerProvider({ children }) {
       getTime,
       getDuration,
       seekTo,
+      onAlbumChange,
     };
   }, [
     current,
@@ -227,6 +245,7 @@ export function PlayerProvider({ children }) {
     getTime,
     getDuration,
     seekTo,
+    onAlbumChange,
   ]);
 
   return (

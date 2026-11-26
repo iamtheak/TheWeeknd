@@ -32,7 +32,8 @@ function Album() {
 
 function AlbumView({ album }) {
   const navigate = useNavigate();
-  const { current, status, playTrack, togglePlay } = usePlayer();
+  const { current, status, playTrack, togglePlay, onAlbumChange } =
+    usePlayer();
 
   const rootRef = useRef(null);
   const coverRef = useRef(null);
@@ -103,6 +104,63 @@ function AlbumView({ album }) {
     tl.eventCallback("onReverseComplete", leave);
     tl.timeScale(1.6).reverse();
   };
+
+  // Playback rolled over from this album into the next one: bring the cover
+  // back to the centre, slide across to the next cover (like the hero
+  // slider), then open the next album's page, whose intro starts centred.
+  const { contextSafe } = useGSAP({ scope: rootRef });
+  const changingRef = useRef(false);
+  useEffect(() => {
+    const advance = contextSafe((nextAlbum) => {
+      const tl = tlRef.current;
+      if (changingRef.current || !tl) return;
+      changingRef.current = true;
+      new Image().src = nextAlbum.src;
+
+      const slide = () => {
+        const size = heroCoverSize();
+        const incoming = document.createElement("img");
+        incoming.src = nextAlbum.src;
+        incoming.alt = "";
+        incoming.className = "album-cover-incoming";
+        incoming.style.width = `${size}px`;
+        document.body.appendChild(incoming);
+
+        const distance = window.innerWidth / 2 + size;
+        gsap
+          .timeline({
+            defaults: { duration: 0.9, ease: "power3.inOut" },
+            onComplete: () => {
+              navigate(`/${nextAlbum.id}`, { replace: true });
+              // Drop the stand-in once the new page has painted its cover.
+              requestAnimationFrame(() =>
+                requestAnimationFrame(() => incoming.remove()),
+              );
+            },
+          })
+          .to(coverRef.current, { x: `-=${distance}` })
+          .fromTo(
+            incoming,
+            { xPercent: -50, yPercent: -50, x: distance },
+            { x: 0 },
+            "<",
+          )
+          // The page's CSS transition fades the colour across.
+          .set(
+            rootRef.current,
+            { backgroundColor: "#" + nextAlbum.color },
+            "<",
+          );
+      };
+
+      tl.eventCallback("onReverseComplete", slide);
+      tl.timeScale(1.6).reverse();
+    });
+
+    return onAlbumChange((fromId, nextAlbum) => {
+      if (fromId === album.id) advance(nextAlbum);
+    });
+  }, [album.id, onAlbumChange, contextSafe, navigate]);
 
   const isCurrentAlbum = current?.albumId === album.id;
 

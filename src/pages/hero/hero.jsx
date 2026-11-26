@@ -6,19 +6,23 @@ import { useNavigate } from "react-router";
 import "./hero.css";
 import Marquee from "../../components/marquee/marquee.jsx";
 import { albums as images } from "../../data/albums.js";
+import { usePlayer } from "../../player/PlayerContext.js";
 import { session } from "../../state/session.js";
 
 gsap.registerPlugin(ScrollTrigger, useGSAP);
 
 function Hero() {
   const navigate = useNavigate();
-  // When coming back from an album page, land on that album.
-  const [startIndex] = useState(() =>
-    Math.max(
+  const { current, onAlbumChange } = usePlayer();
+  // Land on the album that's playing; with nothing playing, on the album
+  // page we came back from.
+  const [startIndex] = useState(() => {
+    const id = current?.albumId ?? session.lastAlbumId;
+    return Math.max(
       0,
-      images.findIndex((album) => album.id === session.lastAlbumId),
-    ),
-  );
+      images.findIndex((album) => album.id === id),
+    );
+  });
   // The XO loader only plays once per visit.
   const [showIntro] = useState(() => !session.introPlayed);
   const [color, setColor] = useState(images[startIndex].color);
@@ -26,6 +30,28 @@ function Hero() {
 
   const mainDivRef = useRef(null);
   const mainRef = useRef(null);
+  // The slider's ScrollTrigger, to pan to an album from outside the timeline.
+  const sliderRef = useRef(null);
+
+  // Playback rolled over into the next album while the start screen is open:
+  // pan the slider to it. The scroll jumps straight to the album's snap point
+  // and the scrub turns the jump into a pan. (A smooth scroll got caught by
+  // the snap partway and was pulled back to the previous album.)
+  useEffect(
+    () =>
+      onAlbumChange((fromId, nextAlbum) => {
+        const st = sliderRef.current;
+        const index = images.findIndex((album) => album.id === nextAlbum.id);
+        session.lastAlbumId = nextAlbum.id;
+        if (!st || index < 0) return;
+        const progress = index / (images.length - 1);
+        window.scrollTo({
+          top: st.start + (st.end - st.start) * progress,
+          behavior: "instant",
+        });
+      }),
+    [onAlbumChange],
+  );
 
   useEffect(() => {
     session.introPlayed = true;
@@ -93,6 +119,8 @@ function Hero() {
         },
       });
     });
+
+    sliderRef.current = tl.scrollTrigger;
 
     // Jump straight to the album we came back from (no scrub animation).
     if (startIndex > 0) {

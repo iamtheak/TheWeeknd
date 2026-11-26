@@ -192,13 +192,15 @@
     height: 36px;
   }
 
-  /* Tight on phones: icon-only lyrics button, and no "previous". */
+  /* Tight on phones: no status label ("Now playing"), icon-only lyrics
+     button, and no "previous". */
   .now-playing-controls .lyrics-toggle {
     width: 36px;
     padding: 0;
     justify-content: center;
   }
 
+  .now-playing-label,
   .lyrics-toggle-label,
   .now-playing-controls .prev {
     display: none;
