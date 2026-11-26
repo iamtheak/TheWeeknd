@@ -2,7 +2,7 @@
   max-height: 100vh;
   overflow: hidden;
   background-color: #282828;
-  transition: all ease-in-out 1s;
+  transition: background-color ease-in-out 0.8s;
 }
 
 .main-div {
@@ -59,6 +59,17 @@
       height: 50vh;
       width: 70vw;
     }
+  }
+}
+
+/* Phones: stack the albums in a column; hero.jsx scrubs them upwards with
+   the same pin, scrub and snap as the desktop slider. Keep in sync with
+   MOBILE_BREAKPOINT in hero.jsx. */
+@media (max-width: 768px) {
+  .main-div {
+    /* Overrides the inline width set for the horizontal slider. */
+    width: 100vw !important;
+    flex-direction: column;
   }
 }
 

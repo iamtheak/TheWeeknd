@@ -21,6 +21,21 @@ function heroCoverSize() {
   return Math.min(50 * vw, 100 * vh);
 }
 
+// The intro and its reverse are measured with the page at the top. On phones
+// the page scrolls (tracklist below the cover), so glide back up first or the
+// cover flies off-centre on the way out.
+function scrollToTopThen(done) {
+  if (window.scrollY <= 0) return done();
+  const proxy = { y: window.scrollY };
+  gsap.to(proxy, {
+    y: 0,
+    duration: Math.min(0.9, 0.35 + proxy.y / 1500),
+    ease: "sine.inOut",
+    onUpdate: () => window.scrollTo(0, proxy.y),
+    onComplete: done,
+  });
+}
+
 function Album() {
   const { albumId } = useParams();
   const album = getAlbum(albumId);
@@ -64,8 +79,8 @@ function AlbumView({ album }) {
           x: dx,
           y: dy,
           scale,
-          duration: 1.1,
-          ease: "power3.inOut",
+          duration: 1.4,
+          ease: "power2.inOut",
         })
         .from(
           ".album-header > *",
@@ -102,7 +117,7 @@ function AlbumView({ album }) {
     const tl = tlRef.current;
     if (!tl) return leave();
     tl.eventCallback("onReverseComplete", leave);
-    tl.timeScale(1.6).reverse();
+    scrollToTopThen(() => tl.timeScale(1.1).reverse());
   };
 
   // Playback rolled over from this album into the next one: bring the cover
@@ -129,7 +144,7 @@ function AlbumView({ album }) {
         const distance = window.innerWidth / 2 + size;
         gsap
           .timeline({
-            defaults: { duration: 0.9, ease: "power3.inOut" },
+            defaults: { duration: 1.3, ease: "power2.inOut" },
             onComplete: () => {
               navigate(`/${nextAlbum.id}`, { replace: true });
               // Drop the stand-in once the new page has painted its cover.
@@ -154,7 +169,7 @@ function AlbumView({ album }) {
       };
 
       tl.eventCallback("onReverseComplete", slide);
-      tl.timeScale(1.6).reverse();
+      scrollToTopThen(() => tl.timeScale(1.1).reverse());
     });
 
     return onAlbumChange((fromId, nextAlbum) => {

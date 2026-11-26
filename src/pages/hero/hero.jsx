@@ -11,6 +11,14 @@ import { session } from "../../state/session.js";
 
 gsap.registerPlugin(ScrollTrigger, useGSAP);
 
+// At or below this width the albums scroll vertically instead of sideways.
+// Keep in sync with hero.css.
+const MOBILE_BREAKPOINT = 768;
+
+// Don't re-measure every time the phone's address bar shows or hides; that
+// refresh makes the pinned slider jump mid-scroll.
+ScrollTrigger.config({ ignoreMobileResize: true });
+
 function Hero() {
   const navigate = useNavigate();
   const { current, onAlbumChange } = usePlayer();
@@ -30,8 +38,8 @@ function Hero() {
 
   const mainDivRef = useRef(null);
   const mainRef = useRef(null);
-  // The slider's ScrollTrigger, to pan to an album from outside the timeline.
-  const sliderRef = useRef(null);
+  // Scrolls the slider to an album from outside the timeline (set per layout).
+  const scrollToIndexRef = useRef(null);
 
   // Playback rolled over into the next album while the start screen is open:
   // pan the slider to it. The scroll jumps straight to the album's snap point
@@ -40,15 +48,10 @@ function Hero() {
   useEffect(
     () =>
       onAlbumChange((fromId, nextAlbum) => {
-        const st = sliderRef.current;
         const index = images.findIndex((album) => album.id === nextAlbum.id);
         session.lastAlbumId = nextAlbum.id;
-        if (!st || index < 0) return;
-        const progress = index / (images.length - 1);
-        window.scrollTo({
-          top: st.start + (st.end - st.start) * progress,
-          behavior: "instant",
-        });
+        if (!scrollToIndexRef.current || index < 0) return;
+        scrollToIndexRef.current(index);
       }),
     [onAlbumChange],
   );
@@ -60,9 +63,6 @@ function Hero() {
   useGSAP(() => {
     if (mainDivRef.current === null) return;
 
-    let curr = mainDivRef.current;
-    let children = curr.children;
-    if (!children) return;
     let imageDivs = gsap.utils.toArray(".img-holder");
     if (imageDivs.length === 0) return;
 
@@ -75,64 +75,80 @@ function Hero() {
       });
     }
 
-    let tl = gsap.timeline({
-      defaults: {
-        ease: "none",
-      },
-      scrollTrigger: {
-        trigger: ".main-div",
-        start: "top top",
-        end: "+=" + mainRef.current.offsetWidth * imageDivs.length,
-        scrub: 3,
-        snap: {
-          snapTo: 1 / (imageDivs.length - 1),
-          duration: { min: 0.5, max: 0.8 },
+    // The hero is pinned and the page's scroll scrubs the albums past it:
+    // sideways on desktop, upwards on phones (where the albums are stacked in
+    // a column, see hero.css). Same scrub and snap either way, so both feel
+    // the same.
+    const setUpSlider = (vertical) => {
+      const pageSize = vertical
+        ? mainRef.current.offsetHeight
+        : mainRef.current.offsetWidth;
+      const travel = -((imageDivs.length - 1) / imageDivs.length) * 100;
+
+      let tl = gsap.timeline({
+        defaults: {
+          ease: "none",
         },
-        pin: ".main",
-        pinSpacing: true,
-      },
-    });
-
-    tl.fromTo(
-      ".main-div",
-      {
-        xPercent: 0,
-      },
-      {
-        xPercent: -((imageDivs.length - 1) / imageDivs.length) * 100,
-      },
-    );
-
-    imageDivs.forEach((div, index) => {
-      tl.from(div, {
         scrollTrigger: {
-          trigger: div,
-          start: "left center",
-          end: "right center",
-          containerAnimation: tl,
-          onEnter: () => {
-            setColor(images[index].color);
+          trigger: ".main-div",
+          start: "top top",
+          end: "+=" + pageSize * imageDivs.length,
+          scrub: 3,
+          snap: {
+            snapTo: 1 / (imageDivs.length - 1),
+            duration: { min: 0.5, max: 0.8 },
           },
-          onEnterBack: () => {
-            setColor(images[index].color);
-          },
+          pin: ".main",
+          pinSpacing: true,
         },
       });
-    });
 
-    sliderRef.current = tl.scrollTrigger;
+      tl.fromTo(
+        ".main-div",
+        vertical ? { yPercent: 0 } : { xPercent: 0 },
+        vertical ? { yPercent: travel } : { xPercent: travel },
+      );
 
-    // Jump straight to the album we came back from (no scrub animation).
-    if (startIndex > 0) {
-      ScrollTrigger.refresh();
+      imageDivs.forEach((div, index) => {
+        tl.from(div, {
+          scrollTrigger: {
+            trigger: div,
+            start: vertical ? "top center" : "left center",
+            end: vertical ? "bottom center" : "right center",
+            containerAnimation: tl,
+            onEnter: () => {
+              setColor(images[index].color);
+            },
+            onEnterBack: () => {
+              setColor(images[index].color);
+            },
+          },
+        });
+      });
+
       const st = tl.scrollTrigger;
-      const progress = startIndex / (imageDivs.length - 1);
-      window.scrollTo(0, st.start + (st.end - st.start) * progress);
-      tl.progress(progress);
-      ScrollTrigger.update();
-      // The per-album triggers fire for every album we skipped; settle on ours.
-      setColor(images[startIndex].color);
-    }
+      scrollToIndexRef.current = (index) => {
+        window.scrollTo({
+          top: st.start + (st.end - st.start) * (index / (imageDivs.length - 1)),
+          behavior: "instant",
+        });
+      };
+
+      // Jump straight to the album we came back from (no scrub animation).
+      if (startIndex > 0) {
+        ScrollTrigger.refresh();
+        const progress = startIndex / (imageDivs.length - 1);
+        window.scrollTo(0, st.start + (st.end - st.start) * progress);
+        tl.progress(progress);
+        ScrollTrigger.update();
+        // The per-album triggers fire for every album we skipped; settle on ours.
+        setColor(images[startIndex].color);
+      }
+    };
+
+    const mm = gsap.matchMedia();
+    mm.add(`(min-width: ${MOBILE_BREAKPOINT + 1}px)`, () => setUpSlider(false));
+    mm.add(`(max-width: ${MOBILE_BREAKPOINT}px)`, () => setUpSlider(true));
   });
 
   const openAlbum = (id) => {

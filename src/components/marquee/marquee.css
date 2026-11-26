@@ -28,3 +28,12 @@
   background-color: white;
   color: #202020;
 }
+
+/* Phones: the hero scrolls vertically, so the banners must not stick out
+   past the screen edge (that made the page draggable sideways). */
+@media (max-width: 768px) {
+  .marquee {
+    width: 100vw;
+    overflow: hidden;
+  }
+}
