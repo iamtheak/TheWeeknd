@@ -59,7 +59,7 @@ export function PlayerProvider({ children }) {
   const [error, setError] = useState(null);
   // The video card only appears once YouTube has a video to show.
   const [hasVideo, setHasVideo] = useState(false);
-  // Mobile only: the video card can be tucked away so it doesn't cover the page.
+  // The video card can be tucked away so it doesn't cover the page.
   const [videoOpen, setVideoOpen] = useState(true);
   const toggleVideo = useCallback(() => setVideoOpen((open) => !open), []);
   const [lyricsOpen, setLyricsOpen] = useState(false);

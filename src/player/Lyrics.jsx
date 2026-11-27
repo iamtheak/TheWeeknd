@@ -10,7 +10,10 @@ const HOLD_MS = 3500;
 
 function Lyrics() {
   const { album, current, track, lyricsOpen } = usePlayer();
-  if (!album || !lyricsOpen) return null;
+  // Stay mounted after closing until the slide-down animation finishes.
+  const [mounted, setMounted] = useState(lyricsOpen);
+  if (lyricsOpen && !mounted) setMounted(true);
+  if (!album || !mounted) return null;
   // Keyed per song so all state (lyrics, scroll) resets on track change.
   return (
     <LyricsPanel
@@ -18,11 +21,13 @@ function Lyrics() {
       album={album}
       index={current.index}
       track={track}
+      closing={!lyricsOpen}
+      onClosed={() => setMounted(false)}
     />
   );
 }
 
-function LyricsPanel({ album, index, track }) {
+function LyricsPanel({ album, index, track, closing, onClosed }) {
   const { getTime, getDuration, seekTo, closeLyrics } = usePlayer();
   const [lyrics, setLyrics] = useState(null); // null while loading
   const [attempt, setAttempt] = useState(0);
@@ -159,8 +164,11 @@ function LyricsPanel({ album, index, track }) {
 
   return (
     <section
-      className="lyrics"
+      className={"lyrics" + (closing ? " closing" : "")}
       aria-label={`Lyrics: ${track}`}
+      onAnimationEnd={(e) => {
+        if (closing && e.target === e.currentTarget) onClosed();
+      }}
       style={{ "--lyrics-bg": "#" + album.color, ...themeVars(album) }}
     >
       <header className="lyrics-header">

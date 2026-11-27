@@ -28,6 +28,13 @@
   transform: none;
 }
 
+/* Slid below the banner, not display:none, so the music keeps playing. */
+.yt-card.visible.collapsed {
+  opacity: 0;
+  pointer-events: none;
+  transform: translateY(calc(100% + var(--banner-height) + 12px));
+}
+
 .yt-host,
 .yt-host iframe {
   width: 100%;
@@ -41,13 +48,6 @@
     left: 16px;
     right: 16px;
     width: auto;
-  }
-
-  /* Slid below the banner, not display:none, so the music keeps playing. */
-  .yt-card.visible.collapsed {
-    opacity: 0;
-    pointer-events: none;
-    transform: translateY(calc(100% + var(--banner-height) + 12px));
   }
 }
 
@@ -154,14 +154,7 @@
 }
 
 .now-playing-controls .video-toggle {
-  display: none;
   font-size: 1.2rem;
-}
-
-@media (max-width: 480px) {
-  .now-playing-controls .video-toggle {
-    display: block;
-  }
 }
 
 .now-playing-controls .lyrics-toggle {
@@ -233,13 +226,26 @@
     color-mix(in srgb, var(--lyrics-bg) 40%, #000) 100%
   );
   font-family: var(--album-body, system-ui, sans-serif);
-  animation: lyrics-in 0.35s ease both;
+  /* Slides up from behind the banner, and back down when closing. */
+  animation: lyrics-in 0.7s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.lyrics.closing {
+  animation: lyrics-out 0.55s cubic-bezier(0.55, 0, 0.8, 0.35) both;
+  pointer-events: none;
 }
 
 @keyframes lyrics-in {
   from {
-    opacity: 0;
-    transform: translateY(24px);
+    opacity: 0.4;
+    transform: translateY(100%);
+  }
+}
+
+@keyframes lyrics-out {
+  to {
+    opacity: 0.4;
+    transform: translateY(100%);
   }
 }
 
@@ -415,8 +421,10 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .lyrics {
-    animation: none;
+  /* Near-instant, but still fires animationend so closing unmounts. */
+  .lyrics,
+  .lyrics.closing {
+    animation-duration: 1ms;
   }
 
   .lyrics-line,

@@ -182,9 +182,8 @@
       "channel": "The Weeknd"
     },
     "Pretty": {
-      "id": "HxilwT1sKSo",
-      "title": "The Weeknd - Pretty (Explicit) (Official Video)",
-      "channel": "TheWeekndVEVO"
+      "id": "Bnxe1_2wnmY",
+      "title": "Pretty"
     },
     "Tears in the Rain": {
       "id": "YFYfZ9jRWXU",
@@ -289,6 +288,11 @@
       "id": "XS_A5aGPIQ0",
       "title": "Privilege",
       "channel": "The Weeknd - Topic"
+    },
+    "Call Out My Name": {
+      "id": "rsEne1ZiQrk",
+      "title": "The Weeknd - Call Out My Name (Official Audio)",
+      "channel": "The Weeknd"
     }
   },
   "starboy": {
@@ -529,6 +533,123 @@
     "Less than Zero": {
       "id": "LKsgDcckur0",
       "title": "The Weeknd - Less Than Zero (Audio)",
+      "channel": "TheWeekndVEVO"
+    },
+    "Phantom Regret by Jim": {
+      "id": "vCOXTEzfoJ4",
+      "title": "The Weeknd - Phantom Regret by Jim (Audio)",
+      "channel": "TheWeekndVEVO"
+    }
+  },
+  "hut": {
+    "Wake Me Up": {
+      "id": "lZ5cv00uUw8",
+      "title": "Wake Me Up (Single Version)",
+      "channel": "The Weeknd - Topic"
+    },
+    "Cry for Me": {
+      "id": "KVgDjivrjjM",
+      "title": "Cry For Me",
+      "channel": "The Weeknd - Topic"
+    },
+    "I Can't Fucking Sing": {
+      "id": "7ndVEebI6hk",
+      "title": "I Can't Fucking Sing",
+      "channel": "The Weeknd - Topic"
+    },
+    "São Paulo": {
+      "id": "9BVnITXdYvQ",
+      "title": "São Paulo",
+      "channel": "The Weeknd - Topic"
+    },
+    "Until We're Skin & Bones": {
+      "id": "qIX_3h3wBsg",
+      "title": "The Weeknd - Until We're Skin & Bones (Audio)",
+      "channel": "TheWeekndVEVO"
+    },
+    "Baptized in Fear": {
+      "id": "WH7L9e07uSQ",
+      "title": "The Weeknd - Baptized In Fear (Audio)",
+      "channel": "TheWeekndVEVO"
+    },
+    "Open Hearts": {
+      "id": "QWEtwGHznxI",
+      "title": "Open Hearts (Single Version)",
+      "channel": "The Weeknd - Topic"
+    },
+    "Opening Night": {
+      "id": "MYZAi6GLXyM",
+      "title": "The Weeknd - Opening Night (Audio)",
+      "channel": "TheWeekndVEVO"
+    },
+    "Reflections Laughing": {
+      "id": "cb1xI8Uk-lI",
+      "title": "Reflections Laughing",
+      "channel": "The Weeknd - Topic"
+    },
+    "Enjoy the Show": {
+      "id": "0bLlbU7x08k",
+      "title": "Enjoy The Show (Single Version)",
+      "channel": "The Weeknd - Topic"
+    },
+    "Given Up on Me": {
+      "id": "dEWCJZQjjhI",
+      "title": "The Weeknd - Given Up On Me (Audio)",
+      "channel": "TheWeekndVEVO"
+    },
+    "I Can't Wait to Get There": {
+      "id": "hAUBhOjgvTE",
+      "title": "I Can't Wait To Get There",
+      "channel": "The Weeknd - Topic"
+    },
+    "Timeless": {
+      "id": "OMaM4TkCasQ",
+      "title": "Timeless",
+      "channel": "The Weeknd - Topic"
+    },
+    "Niagara Falls": {
+      "id": "jmopn_q_0TU",
+      "title": "Niagara Falls",
+      "channel": "The Weeknd - Topic"
+    },
+    "Take Me Back to LA": {
+      "id": "tYvKLO0wOcU",
+      "title": "The Weeknd - Take Me Back To LA (Audio)",
+      "channel": "TheWeekndVEVO"
+    },
+    "Big Sleep": {
+      "id": "1FopqsTIfY0",
+      "title": "The Weeknd, Giorgio Moroder - Big Sleep (Audio)",
+      "channel": "TheWeekndVEVO"
+    },
+    "Give Me Mercy": {
+      "id": "cVoO8ZYXkrQ",
+      "title": "The Weeknd - Give Me Mercy (Audio)",
+      "channel": "TheWeekndVEVO"
+    },
+    "Drive": {
+      "id": "yP_hw6I-pBQ",
+      "title": "The Weeknd - Drive (Audio)",
+      "channel": "TheWeekndVEVO"
+    },
+    "The Abyss": {
+      "id": "S3ncfrQPpjs",
+      "title": "The Weeknd, Lana Del Rey - The Abyss (Audio)",
+      "channel": "TheWeekndVEVO"
+    },
+    "Red Terror": {
+      "id": "9GFQCDz2Jr8",
+      "title": "The Weeknd - Red Terror (Audio)",
+      "channel": "TheWeekndVEVO"
+    },
+    "Without a Warning": {
+      "id": "qgjRtdfj1e0",
+      "title": "The Weeknd - Without a Warning (Audio)",
+      "channel": "TheWeekndVEVO"
+    },
+    "Hurry Up Tomorrow": {
+      "id": "R4UUEf2XuWg",
+      "title": "The Weeknd - Hurry Up Tomorrow (Audio)",
       "channel": "TheWeekndVEVO"
     }
   }
